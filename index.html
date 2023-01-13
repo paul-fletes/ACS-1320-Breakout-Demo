@@ -30,6 +30,23 @@
         let y = canvas.height - 30;
         let dx = 2;
         let dy = -2;
+        //define ball radius for collision calcs
+        const ballRadius = 10;
+        //define a fxn that returns a random hex color value
+        // function randColor() {
+        //     return (
+        //         "#" + (Math.floor(Math.random() * 0x1000000) + 0x1000000).toString(16).substr(1)
+        //     );
+        // }
+
+        function drawBall() {
+            //draw a ball
+            ctx.beginPath();
+            ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+        }
 
         function draw() {
             //clear canvas
@@ -39,15 +56,16 @@
             //update x/y with dx/dy
             x += dx;
             y += dy;
-        }
-
-        function drawBall() {
-            //draw a ball
-            ctx.beginPath();
-            ctx.arc(x, y, 10, 0, Math.PI * 2);
-            ctx.fillStyle = "#0095DD";
-            ctx.fill();
-            ctx.closePath();
+            //check for top/bottom wall collision
+            if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+                dy = -dy;
+                // color = randColor(); //revisit
+            }
+            //check for left/right wall collision
+            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+                dx = -dx;
+                // color = randColor(); //rev
+            }
         }
 
         setInterval(draw, 10);
