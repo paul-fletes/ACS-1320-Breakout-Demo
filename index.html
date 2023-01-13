@@ -63,6 +63,7 @@
         //set event listeners for keypress
         document.addEventListener('keydown', keyDownHandler, false);
         document.addEventListener('keyup', keyUpHandler, false);
+        document.addEventListener('mousemove', mouseMoveHandler, false);
 
         //define fxns that handle key down/up events
         function keyDownHandler(e) {
@@ -78,6 +79,13 @@
                 rightPressed = false;
             } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
                 leftPressed = false;
+            }
+        }
+
+        function mouseMoveHandler(e) {
+            const relativeX = e.clientX - canvas.offsetLeft;
+            if (relativeX > 0 && relativeX < canvas.width) {
+                paddleX = relativeX - paddleWidth / 2;
             }
         }
 
