@@ -42,8 +42,8 @@
         let rightPressed = false;
         let leftPressed = false;
         //declare brick variables
-        const brickRowCount = 3;
-        const brickColumnCount = 5;
+        const brickRowCount = 5;
+        const brickColumnCount = 3;
         const brickWidth = 75;
         const brickHeight = 20;
         const brickPadding = 10;
@@ -54,15 +54,54 @@
         for (let c = 0; c < brickColumnCount; c++) {
             bricks[c] = [];
             for (let r = 0; r < brickRowCount; r++) {
-                bricks[c][r] = { x: 0, y: 0 };
+                bricks[c][r] = { x: 0, y: 0, status: 1 };
             }
         }
+
+        //set event listeners for keypress
+        document.addEventListener('keydown', keyDownHandler, false);
+        document.addEventListener('keyup', keyUpHandler, false);
+
+        //define fxns that handle key down/up events
+        function keyDownHandler(e) {
+            if (e.key === 'Right' || e.key === 'ArrowRight') {
+                rightPressed = true;
+            } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+                leftPressed = true;
+            }
+        }
+
+        function keyUpHandler(e) {
+            if (e.key === 'Right' || e.key === 'ArrowRight') {
+                rightPressed = false;
+            } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
+                leftPressed = false;
+            }
+        }
+
         //define a fxn that returns a random hex color value
         function randColor() {
             return (
                 "#" + (Math.floor(Math.random() * 0x1000000) + 0x1000000).toString(16).substring(1)
             );
         }
+
+        //define a fxn that detects ball/brick collision
+        function collisionDetection() {
+            for (let c = 0; c < brickColumnCount; c++) {
+                for (let r = 0; r < brickRowCount; r++) {
+                    const b = bricks[c][r];
+                    //change ball direction on ball/brick collision
+                    if (b.status === 1) {
+                        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                            dy = -dy;
+                            b.status = 0;
+                        }
+                    }
+                }
+            }
+        }
+
 
 
         //define a fxn that draws a ball using the context methods
@@ -96,15 +135,17 @@
         function drawBricks() {
             for (let c = 0; c < brickColumnCount; c++) {
                 for (let r = 0; r < brickRowCount; r++) {
-                    const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-                    const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-                    bricks[c][r].x = 0;
-                    bricks[c][r].y = 0;
-                    ctx.beginPath();
-                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                    ctx.fillStyle = '#0095DD';
-                    ctx.fill();
-                    ctx.closePath();
+                    if (bricks[c][r].status === 1) {
+                        const brickX = r * (brickWidth + brickPadding) + brickOffsetLeft;
+                        const brickY = c * (brickHeight + brickPadding) + brickOffsetTop;
+                        bricks[c][r].x = brickX;
+                        bricks[c][r].y = brickY;
+                        ctx.beginPath();
+                        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                        ctx.fillStyle = '#0095DD';
+                        ctx.fill();
+                        ctx.closePath();
+                    }
                 }
             }
         }
@@ -117,6 +158,8 @@
             drawBall();
             //call drawpaddle fxn
             drawPaddle();
+            //call collisiondetection fxn
+            collisionDetection();
             //call drawbricks fxn
             drawBricks();
             //check for top/bottom wall/paddle collision
@@ -143,27 +186,6 @@
                 paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
             } else if (leftPressed) {
                 paddleX = Math.max(paddleX - 7, 0);
-            }
-        }
-
-        //set event listeners for keypress
-        document.addEventListener('keydown', keyDownHandler, false);
-        document.addEventListener('keyup', keyUpHandler, false);
-
-        //define fxns that handle key down/up events
-        function keyDownHandler(e) {
-            if (e.key === 'Right' || e.key === 'ArrowRight') {
-                rightPressed = true;
-            } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-                leftPressed = true;
-            }
-        }
-
-        function keyUpHandler(e) {
-            if (e.key === 'Right' || e.key === 'ArrowRight') {
-                rightPressed = false;
-            } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
-                leftPressed = false;
             }
         }
 
