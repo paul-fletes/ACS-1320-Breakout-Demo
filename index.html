@@ -32,18 +32,29 @@
         let dy = -2;
         //define ball radius for collision calcs
         const ballRadius = 10;
+        //define ball color
+        let color = "#0095DD"
         //define a fxn that returns a random hex color value
-        // function randColor() {
-        //     return (
-        //         "#" + (Math.floor(Math.random() * 0x1000000) + 0x1000000).toString(16).substr(1)
-        //     );
-        // }
+        function randColor() {
+            return (
+                "#" + (Math.floor(Math.random() * 0x1000000) + 0x1000000).toString(16).substring(1)
+            );
+        }
 
         function drawBall() {
             //draw a ball
             ctx.beginPath();
             ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-            ctx.fillStyle = "#0095DD";
+            //condition check for collision color change
+            //check for top/bottom wall collision
+            if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+                color = randColor();
+            }
+            //check for left/right wall collision
+            if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+                color = randColor();
+            }
+            ctx.fillStyle = color;
             ctx.fill();
             ctx.closePath();
         }
@@ -53,19 +64,17 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             //call drawball fxn
             drawBall();
-            //update x/y with dx/dy
-            x += dx;
-            y += dy;
             //check for top/bottom wall collision
             if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
                 dy = -dy;
-                // color = randColor(); //revisit
             }
             //check for left/right wall collision
             if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
                 dx = -dx;
-                // color = randColor(); //rev
             }
+            //update x/y with dx/dy
+            x += dx;
+            y += dy;
         }
 
         setInterval(draw, 10);
