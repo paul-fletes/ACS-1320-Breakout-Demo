@@ -25,29 +25,44 @@
     <script>
         const canvas = document.getElementById('myCanvas'); //reference to canvas obj
         const ctx = canvas.getContext('2d'); //create context to paint canvas
-        //define x/y coordinates
+        //declare x/y coordinates
         let x = canvas.width / 2;
         let y = canvas.height - 30;
         let dx = 2;
         let dy = -2;
-        //define ball radius for collision calcs
+        //declare ball radius for collision calcs
         const ballRadius = 10;
-        //define ball color
+        //declare ball color
         let color = "#0095DD"
-        //define paddle variables
+        //declare paddle variables
         const paddleHeight = 10;
         const paddleWidth = 75;
         let paddleX = (canvas.width - paddleWidth) / 2;
-        //define keypress variables
+        //declare keypress variables
         let rightPressed = false;
         let leftPressed = false;
+        //declare brick variables
+        const brickRowCount = 3;
+        const brickColumnCount = 5;
+        const brickWidth = 75;
+        const brickHeight = 20;
+        const brickPadding = 10;
+        const brickOffsetTop = 30;
+        const brickOffsetLeft = 30;
+        //declare an array to hold brick field
+        const bricks = [];
+        for (let c = 0; c < brickColumnCount; c++) {
+            bricks[c] = [];
+            for (let r = 0; r < brickRowCount; r++) {
+                bricks[c][r] = { x: 0, y: 0 };
+            }
+        }
         //define a fxn that returns a random hex color value
         function randColor() {
             return (
                 "#" + (Math.floor(Math.random() * 0x1000000) + 0x1000000).toString(16).substring(1)
             );
         }
-        //define a fxn that speeds ball up when it his paddle
 
 
         //define a fxn that draws a ball using the context methods
@@ -77,6 +92,23 @@
             ctx.closePath();
         }
 
+        //define a fxn that draws the brick field
+        function drawBricks() {
+            for (let c = 0; c < brickColumnCount; c++) {
+                for (let r = 0; r < brickRowCount; r++) {
+                    const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+                    const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+                    bricks[c][r].x = 0;
+                    bricks[c][r].y = 0;
+                    ctx.beginPath();
+                    ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                    ctx.fillStyle = '#0095DD';
+                    ctx.fill();
+                    ctx.closePath();
+                }
+            }
+        }
+
         //define a function that covers all drawings on canvas using context methods
         function draw() {
             //clear canvas
@@ -85,6 +117,8 @@
             drawBall();
             //call drawpaddle fxn
             drawPaddle();
+            //call drawbricks fxn
+            drawBricks();
             //check for top/bottom wall/paddle collision
             if (y + dy < ballRadius) {
                 dy = -dy;
