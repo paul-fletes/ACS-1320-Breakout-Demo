@@ -49,6 +49,8 @@
         const brickPadding = 10;
         const brickOffsetTop = 30;
         const brickOffsetLeft = 30;
+        //declare a score variable
+        let score = 0;
         //declare an array to hold brick field
         const bricks = [];
         for (let c = 0; c < brickColumnCount; c++) {
@@ -96,13 +98,26 @@
                         if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
                             dy = -dy;
                             b.status = 0;
+                            color = randColor(); //update ball color on brick hit
+                            score++; //award point each hit
+                            //game win logic
+                            if (score === brickRowCount * brickColumnCount) {
+                                alert(`YOU WIN, CONGRATS! TOTAL SCORE: ${score}!`);
+                                document.location.reload();
+                                clearInterval(interval);
+                            }
                         }
                     }
                 }
             }
         }
 
-
+        //define a function to update score
+        function drawScore() {
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#0095DD';
+            ctx.fillText(`Score: ${score}`, 8, 20);
+        }
 
         //define a fxn that draws a ball using the context methods
         function drawBall() {
@@ -158,6 +173,8 @@
             drawBall();
             //call drawpaddle fxn
             drawPaddle();
+            //call drawscore fxn
+            drawScore();
             //call collisiondetection fxn
             collisionDetection();
             //call drawbricks fxn
@@ -169,7 +186,7 @@
                 if (x > paddleX && x < paddleX + paddleWidth) {
                     dy = -dy * 1.1; // '* 1.1' increases dy by 10% each paddle hit
                 } else {
-                    alert('GAME OVER')
+                    alert(`GAME OVER! TOTAL SCORE: ${score}!`)
                     document.location.reload();
                     clearInterval(interval);
                 }
