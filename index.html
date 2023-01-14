@@ -51,6 +51,8 @@
         const brickOffsetLeft = 30;
         //declare a score variable
         let score = 0;
+        //declare a variable to track lives
+        let lives = 3;
         //declare an array to hold brick field
         const bricks = [];
         for (let c = 0; c < brickColumnCount; c++) {
@@ -112,7 +114,6 @@
                             if (score === brickRowCount * brickColumnCount) {
                                 alert(`YOU WIN, CONGRATS! TOTAL SCORE: ${score}!`);
                                 document.location.reload();
-                                clearInterval(interval);
                             }
                         }
                     }
@@ -125,6 +126,13 @@
             ctx.font = '16px Arial';
             ctx.fillStyle = '#0095DD';
             ctx.fillText(`Score: ${score}`, 8, 20);
+        }
+
+        //define a function to update lives
+        function drawLives() {
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#0095DD';
+            ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
         }
 
         //define a fxn that draws a ball using the context methods
@@ -187,16 +195,26 @@
             collisionDetection();
             //call drawbricks fxn
             drawBricks();
+            //call drawlives fxn
+            drawLives();
             //check for top/bottom wall/paddle collision
             if (y + dy < ballRadius) {
                 dy = -dy;
             } else if (y + dy > canvas.height - ballRadius) {
                 if (x > paddleX && x < paddleX + paddleWidth) {
                     dy = -dy * 1.1; // '* 1.1' increases dy by 10% each paddle hit
-                } else {
-                    alert(`GAME OVER! TOTAL SCORE: ${score}!`)
-                    document.location.reload();
-                    clearInterval(interval);
+                } else { //game loss logic
+                    lives--;
+                    if (!lives) {
+                        alert(`GAME OVER! TOTAL SCORE: ${score}!`)
+                        document.location.reload();
+                    } else {
+                        x = canvas.width / 2;
+                        y = canvas.height - 30;
+                        dx = 2;
+                        dy = -2;
+                        paddleX = (canvas.width - paddleWidth) / 2;
+                    };
                 }
             }
             //check for left/right wall collision
@@ -212,9 +230,10 @@
             } else if (leftPressed) {
                 paddleX = Math.max(paddleX - 7, 0);
             }
+            requestAnimationFrame(draw);
         }
 
-        const interval = setInterval(draw, 10);
+        draw();
     </script>
 </body>
 
