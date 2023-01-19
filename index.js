@@ -69,7 +69,8 @@ document.addEventListener('mousemove', mouseMoveHandler, false);
 // define a fxn that returns a random hex color value
 function randColor() {
   return (
-    '#' + (Math.floor(Math.random() * 0x1000000) + 0x1000000).toString(16).substring(1)
+    `#${(Math.floor(Math.random() * 0x1000000) + 0x1000000)
+      .toString(16).substring(1)}`
   );
 }
 
@@ -96,30 +97,30 @@ function collisionDetection() {
   }
 }
 
-//define a function to update score
+// define a function to update score
 function drawScore() {
   ctx.font = '16px Arial';
   ctx.fillStyle = '#0095DD';
   ctx.fillText(`Score: ${score}`, 8, 20);
 }
 
-//define a function to update lives
+// define a function to update lives
 function drawLives() {
   ctx.font = '16px Arial';
   ctx.fillStyle = '#0095DD';
   ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
-//define a fxn that draws a ball using the context methods
+// define a fxn that draws a ball using the context methods
 function drawBall() {
-  //draw a ball
+  // draw a ball
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  //check for top/bottom wall collision color change
+  // check for top/bottom wall collision color change
   if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
     color = randColor();
   }
-  //check for left/right wall collision color change
+  // check for left/right wall collision color change
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     color = randColor();
   }
@@ -128,7 +129,7 @@ function drawBall() {
   ctx.closePath();
 }
 
-//define a fxn that draws a paddle
+// define a fxn that draws a paddle
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
@@ -137,10 +138,10 @@ function drawPaddle() {
   ctx.closePath();
 }
 
-//define a fxn that draws the brick field
+// define a fxn that draws the brick field
 function drawBricks() {
-  for (let c = 0; c < brickColumnCount; c++) {
-    for (let r = 0; r < brickRowCount; r++) {
+  for (let c = 0; c < brickColumnCount; c += 1) {
+    for (let r = 0; r < brickRowCount; r += 1) {
       if (bricks[c][r].status === 1) {
         const brickX = r * (brickWidth + brickPadding) + brickOffsetLeft;
         const brickY = c * (brickHeight + brickPadding) + brickOffsetTop;
@@ -156,32 +157,32 @@ function drawBricks() {
   }
 }
 
-//define a function that covers all drawings on canvas using context methods
+// define a function that covers all drawings on canvas using context methods
 function draw() {
-  //clear canvas
+  // clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //call drawball fxn
+  // call drawball fxn
   drawBall();
-  //call drawpaddle fxn
+  // call drawpaddle fxn
   drawPaddle();
-  //call drawscore fxn
+  // call drawscore fxn
   drawScore();
-  //call collisiondetection fxn
+  // call collisiondetection fxn
   collisionDetection();
-  //call drawbricks fxn
+  // call drawbricks fxn
   drawBricks();
-  //call drawlives fxn
+  // call drawlives fxn
   drawLives();
-  //check for top/bottom wall/paddle collision
+  // check for top/bottom wall/paddle collision
   if (y + dy < ballRadius) {
     dy = -dy;
   } else if (y + dy > canvas.height - ballRadius) {
     if (x > paddleX && x < paddleX + paddleWidth) {
       dy = -dy * 1.1; // '* 1.1' increases dy by 10% each paddle hit
-    } else { //game loss logic
-      lives--;
+    } else { // game loss logic
+      lives -= 1;
       if (!lives) {
-        alert(`GAME OVER! TOTAL SCORE: ${score}!`)
+        alert(`GAME OVER! TOTAL SCORE: ${score}!`);
         document.location.reload();
       } else {
         x = canvas.width / 2;
@@ -189,17 +190,17 @@ function draw() {
         dx = 2;
         dy = -2;
         paddleX = (canvas.width - paddleWidth) / 2;
-      };
+      }
     }
   }
-  //check for left/right wall collision
+  // check for left/right wall collision
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
   }
-  //update x/y with dx/dy
+  // update x/y with dx/dy
   x += dx;
   y += dy;
-  //update paddle mvmts with right/left press
+  // update paddle mvmts with right/left press
   if (rightPressed) {
     paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
   } else if (leftPressed) {
