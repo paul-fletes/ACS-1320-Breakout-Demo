@@ -1,20 +1,11 @@
-class Paddle {
-  constructor(x, y, width, height, color = 'red') {
+class Brick {
+  constructor(x, y, width, height, color) {
     this.x = x;
     this.y = y;
+    this.status = 1;
     this.width = width;
     this.height = height;
     this.color = color;
-  }
-
-  moveBy(dx, dy) {
-    this.x += dx;
-    this.y += dy;
-  }
-
-  moveTo(x, y) {
-    this.x = x;
-    this.y = y;
   }
 
   render(ctx) {
