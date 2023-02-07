@@ -1,3 +1,8 @@
+import Ball from './Ball.js'
+import Paddle from './Paddle.js'
+import Bricks from './Bricks.js'
+import GameLabel from './GameLabel.js'
+
 class Game {
   constructor(canvasId) {
     this.canvas = document.getElementById(canvasId); // reference to canvas obj
@@ -11,17 +16,26 @@ class Game {
     this.brickWidth = 75;
     this.brickHeight = 20;
     this.brickPadding = 10;
-    this.brickOffsetTop = 30;
-    this.brickOffsetLeft = 30;
+    this.offsetTop = 30;
+    this.offsetLeft = 30;
     this.paddleXStart = (this.canvas.width - this.paddleWidth) / 2;
     this.paddleYStart = this.canvas.height - this.paddleHeight;
-    this.PI2 = Math.PI * 2;
     this.color = '#0095DD';
 
     this.ball = new Ball(0, 0, 2, -2, this.ballRadius, this.color);
     this.paddle = new Paddle(
       this.paddleXStart, this.paddleYStart, this.paddleWidth, this.paddleHeight, this.color);
-    this.bricks = new Bricks(this.brickColumnCount, this.brickRowCount);
+    // this.bricks = new Bricks(this.brickColumnCount, this.brickRowCount);
+    this.bricks = new Bricks({
+      cols: this.brickColumnCount,
+      rows: this.brickRowCount,
+      width: this.brickWidth,
+      height: this.brickHeight,
+      padding: this.brickPadding,
+      offsetLeft: this.offsetLeft,
+      offsetTop: this.offsetTop,
+      color: this.color,
+    });
     this.scoreLabel = new GameLabel('Score: ', 8, 20);
     this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20);
 
@@ -156,3 +170,5 @@ class Game {
     });
   }
 }
+
+export default Game;
