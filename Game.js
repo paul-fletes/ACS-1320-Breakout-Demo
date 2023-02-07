@@ -1,5 +1,5 @@
 import Ball from './Ball.js'
-import Paddle from './Paddle.js'
+import Sprite from './Sprite.js'
 import Bricks from './Bricks.js'
 import GameLabel from './GameLabel.js'
 
@@ -23,7 +23,7 @@ class Game {
     this.color = '#0095DD';
 
     this.ball = new Ball(0, 0, 2, -2, this.ballRadius, this.color);
-    this.paddle = new Paddle(
+    this.paddle = new Sprite(
       this.paddleXStart, this.paddleYStart, this.paddleWidth, this.paddleHeight, this.color);
     // this.bricks = new Bricks(this.brickColumnCount, this.brickRowCount);
     this.bricks = new Bricks({
@@ -36,8 +36,8 @@ class Game {
       offsetTop: this.offsetTop,
       color: this.color,
     });
-    this.scoreLabel = new GameLabel('Score: ', 8, 20);
-    this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20);
+    this.scoreLabel = new GameLabel('Score: ', 8, 20, this.color);
+    this.livesLabel = new GameLabel('Lives: ', this.canvas.width - 65, 20, this.color);
 
     this.rightPressed = false;
     this.leftPressed = false;
@@ -143,7 +143,6 @@ class Game {
   }
 
   draw() {
-    console.log('>>>draw()<<<', this);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // call drawball fxn
     this.ball.render(this.ctx);

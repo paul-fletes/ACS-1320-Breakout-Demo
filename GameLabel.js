@@ -1,9 +1,9 @@
-class GameLabel {
+import Sprite from './Sprite.js'
+
+class GameLabel extends Sprite {
   constructor(text, x, y, color, font = '16px Arial') {
+    super(x, y, 0, 0, color);
     this.text = text;
-    this.x = x;
-    this.y = y;
-    this.color = color;
     this.value = 0;
     this.font = font;
   }
