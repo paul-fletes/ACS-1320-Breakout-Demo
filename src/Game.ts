@@ -4,7 +4,31 @@ import Bricks from './Bricks';
 import GameLabel from './GameLabel';
 
 class Game {
-  constructor(canvasId) {
+  canvas: any // Revisit
+  ctx: any // Revisit
+  ballRadius: number
+  paddleHeight: number
+  paddleWidth: number
+  brickRowCount: number
+  brickColumnCount: number
+  brickWidth: number
+  brickHeight: number
+  brickPadding: number
+  offsetTop: number
+  offsetLeft: number
+  paddleXStart: number
+  paddleYStart: number
+  color: string
+  ball: Ball
+  paddle: Sprite
+  bricks: Bricks
+  scoreLabel: GameLabel
+  livesLabel: GameLabel
+  rightPressed: boolean
+  leftPressed: boolean
+
+
+  constructor(canvasId: string) {
     this.canvas = document.getElementById(canvasId); // reference to canvas obj
     this.ctx = this.canvas.getContext('2d'); // create context to paint canvas
 
@@ -48,13 +72,19 @@ class Game {
   }
 
   setup() {
+    console.log("*****THIS IS SETUP!!!!******")
     this.livesLabel.value = 3;
     this.resetBallAndPaddle();
     document.addEventListener('keydown', (e) => {
       this.keyDownHandler(e);
     }, false);
-    document.addEventListener('keyup', this.keyUpHandler.bind(this), false);
-    document.addEventListener('mousemove', this.mouseMoveHandler.bind(this), false);
+    document.addEventListener('keyup', (e) => {
+      this.keyUpHandler(e);
+    }, false);
+    document.addEventListener('mousemove', (e) => {
+      console.log('mouse move!');
+      this.mouseMoveHandler(e);
+    }, false);
   }
 
   resetBallAndPaddle() {
@@ -119,7 +149,7 @@ class Game {
     }
   }
 
-  keyDownHandler(e) {
+  keyDownHandler(e: KeyboardEvent) {
     if (e.key === 'Right' || e.key === 'ArrowRight') {
       this.rightPressed = true;
     } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
@@ -127,7 +157,7 @@ class Game {
     }
   }
 
-  keyUpHandler(e) {
+  keyUpHandler(e: KeyboardEvent) {
     if (e.key === 'Right' || e.key === 'ArrowRight') {
       this.rightPressed = false;
     } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
@@ -135,9 +165,10 @@ class Game {
     }
   }
 
-  mouseMoveHandler(e) {
+  mouseMoveHandler(e: MouseEvent) {
     const relativeX = e.clientX - this.canvas.offsetLeft;
-    if (this.relativeX > 0 && relativeX < this.canvas.width) {
+    console.log(relativeX)
+    if (relativeX > 0 && relativeX < this.canvas.width) {
       this.paddle.moveTo(relativeX - this.paddle.width / 2, this.paddleYStart);
     }
   }
