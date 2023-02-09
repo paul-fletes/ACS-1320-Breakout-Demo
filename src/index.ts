@@ -1,3 +1,3 @@
 import Game from './Game';
 
-const game = new Game('myCanvas');
+const game: Game = new Game('myCanvas');
